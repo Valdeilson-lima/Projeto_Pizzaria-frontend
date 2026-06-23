@@ -1,7 +1,8 @@
 "use server";
+
 import { apiClient } from "@/lib/api";
 import { User } from "@/lib/types";
-import { cookies } from "next/headers";
+import { setToken } from "@/lib/auth";
 
 export async function registerActions(
   prevState: { success: boolean; error: string; redirectTo: string } | null,
@@ -34,18 +35,12 @@ export async function loginActions(
     const password = formData.get("password") as string;
     const data = { email, password };
 
-    const response = await apiClient<{ token: string }>("/session", {
+    const response = await apiClient<User>("/session", {
       method: "POST",
       body: JSON.stringify(data),
     });
 
-    const cookieStore = await cookies();
-    cookieStore.set("token", response.token, {
-      path: "/",
-      httpOnly: true,
-      sameSite: "lax",
-      maxAge: 60 * 60 * 24 * 7, // 7 dias
-    });
+    await setToken(response.token);
 
     return { success: true, error: "", redirectTo: "/dashboard" };
   } catch (error) {
