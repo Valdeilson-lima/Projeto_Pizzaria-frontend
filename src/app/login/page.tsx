@@ -1,19 +1,11 @@
-import {
-  Card,
-  CardAction,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { LoginForm } from "@/components/forms/login-form";
 
 export default function Page() {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Card Title</CardTitle>
-      </CardHeader>
-    </Card>
+    <div className="bg-app-background min-h-screen flex items-center justify-center px-4">
+      <div className="w-full">
+        <LoginForm />
+      </div>
+    </div>
   );
 }
