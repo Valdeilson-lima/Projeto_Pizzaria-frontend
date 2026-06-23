@@ -37,10 +37,16 @@ export async function apiClient<T>(
   });
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({
-      message: "Erro HTTP: " + response.body,
-    }));
-    throw new Error(error.message || "Erro HTTP: " + response.status);
+    const errorBody = await response.json().catch(() => null);
+    const message =
+      errorBody?.message || errorBody?.error || `Erro HTTP ${response.status}`;
+    const error = new Error(message) as Error & {
+      status: number;
+      data: unknown;
+    };
+    error.status = response.status;
+    error.data = errorBody;
+    throw error;
   }
 
   return response.json();

@@ -2,6 +2,7 @@
 
 import { useActionState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,8 +21,14 @@ export function RegisterForm() {
   const router = useRouter();
 
   useEffect(() => {
-    if (state?.redirectTo && state?.success) {
+    if (!state) return;
+
+    if (state.success && state.redirectTo) {
       router.replace(state.redirectTo);
+    }
+
+    if (!state.success && state.error) {
+      toast.error(state.error);
     }
   }, [state]);
 
@@ -82,9 +89,6 @@ export function RegisterForm() {
               className="text-white bg-app-card boder border-app-border h-9"
             />
           </div>
-          {state?.error && (
-            <p className="text-red-500 text-center">{state?.error}</p>
-          )}
           <Button
             type="submit"
             className="w-full bg-brand-primary hover:bg-brand-primary/80 transition-all duration-300 cursor-pointer text-white text-center font-bold h-9"
