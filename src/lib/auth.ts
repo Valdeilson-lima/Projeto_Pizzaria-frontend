@@ -1,4 +1,7 @@
 import { cookies } from "next/headers";
+import { apiClient } from "./api";
+import { User } from "./types";
+import { redirect } from "next/navigation";
 
 const COOKIE_NAME = "token";
 
@@ -21,4 +24,38 @@ export async function setToken(token: string) {
 export async function removeToken() {
   const cookieStore = await cookies();
   cookieStore.delete(COOKIE_NAME);
+}
+
+export async function getUser(): Promise<User | null> {
+  try {
+    const token = await getToken();
+
+    if (!token) {
+      return null;
+    }
+
+    const response = await apiClient<User>("/me", {
+      token,
+    });
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      return null;
+    }
+    return null;
+  }
+}
+
+export async function requireAdminUser(): Promise<User> {
+  const user = await getUser();
+
+  if (!user) {
+    redirect("/login");
+  }
+
+  if (user.role !== "ADMIN") {
+    redirect("/access-denied");
+  }
+
+  return user;
 }

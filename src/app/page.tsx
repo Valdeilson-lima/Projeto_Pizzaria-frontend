@@ -6,7 +6,7 @@ export default async function Page() {
 
   if (token) {
     redirect("/dashboard");
-  } else {
-    redirect("/login");
   }
+
+  redirect("/login");
 }
