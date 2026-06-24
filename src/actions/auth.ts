@@ -2,7 +2,8 @@
 
 import { apiClient } from "@/lib/api";
 import { User } from "@/lib/types";
-import { setToken } from "@/lib/auth";
+import { removeToken, setToken } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export async function registerActions(
   prevState: { success: boolean; error: string; redirectTo: string } | null,
@@ -49,4 +50,9 @@ export async function loginActions(
     }
     return { success: false, error: "Erro desconhecido", redirectTo: "" };
   }
+}
+
+export async function logoutActions() {
+  await removeToken();
+  redirect("/login");
 }
