@@ -29,14 +29,31 @@
 frontend/
 ├── src/
 │   ├── actions/
-│   │   └── auth.ts              # Server Actions de autenticação
+│   │   ├── auth.ts              # Server Actions de autenticação
+│   │   ├── category.ts          # Server Actions de categorias
+│   │   └── product.ts           # Server Actions de produtos
 │   ├── app/
 │   │   ├── globals.css          # Tema Tailwind v4 + shadcn
 │   │   ├── layout.tsx           # Root layout (ThemeProvider + Toaster)
 │   │   ├── page.tsx             # / → redirect para /login
-│   │   ├── login/page.tsx       # /login — SKELETON (incompleto)
-│   │   └── register/page.tsx    # /register — página de cadastro
+│   │   ├── login/
+│   │   │   └── page.tsx         # /login — formulário de login
+│   │   ├── register/
+│   │   │   └── page.tsx         # /register — página de cadastro
+│   │   └── dashboard/
+│   │       ├── layout.tsx       # Layout protegido c/ sidebar
+│   │       ├── page.tsx         # /dashboard — home
+│   │       ├── products/
+│   │       │   └── page.tsx     # /dashboard/products — CRUD produtos
+│   │       └── categories/
+│   │           └── page.tsx     # /dashboard/categories — CRUD categorias
 │   ├── components/
+│   │   ├── dashboard/
+│   │   │   ├── sidebar.tsx             # Sidebar desktop
+│   │   │   ├── mobile-sidebar.tsx      # Sidebar mobile (Sheet)
+│   │   │   ├── create-product-dialog.tsx  # Dialog criar produto
+│   │   │   ├── delete-product-button.tsx  # Botão excluir produto
+│   │   │   └── create-category-dialog.tsx # Dialog criar categoria
 │   │   ├── forms/
 │   │   │   └── register-form.tsx # Formulário de cadastro
 │   │   └── ui/
@@ -52,7 +69,9 @@ frontend/
 │   │       └── textarea.tsx     # Textarea auto-resize
 │   └── lib/
 │       ├── api.ts               # apiClient — wrapper fetch
-│       └── utils.ts             # cn() — clsx + tailwind-merge
+│       ├── auth.ts              # getToken, setToken, requireAdminUser
+│       ├── types.ts             # Interfaces User, Category, Product
+│       └── utils.ts             # cn(), formatPrice(), formatPriceReal()
 ├── docs/
 │   └── CONTEXT.md               # Este documento
 ├── endpoint.md                  # Documentação dos endpoints do backend
@@ -113,29 +132,41 @@ apiClient<T>(endpoint, {
 
 ---
 
-## Server Actions — `src/actions/auth.ts`
+## Server Actions
 
-```ts
-registerActions(prevState, formData): Promise<{
-  success: boolean
-  error: string
-  redirectTo: string
-}>
-```
+### `src/actions/auth.ts`
 
-- Registra usuário via `POST /users`
-- Extrai `name`, `email`, `password` do FormData
-- Captura erros do `apiClient` e retorna `error.message` no estado
+| Função            | Endpoint        | Descrição                     |
+| ----------------- | --------------- | ----------------------------- |
+| `registerActions` | `POST /users`   | Registrar novo usuário        |
+| `loginActions`    | `POST /session` | Autenticar usuário (JWT)      |
+| `logoutActions`   | —               | Remover cookie e redirecionar |
+
+### `src/actions/category.ts`
+
+| Função                 | Endpoint           | Descrição            |
+| ---------------------- | ------------------ | -------------------- |
+| `createCategoryAction` | `POST /categories` | Criar nova categoria |
+
+### `src/actions/product.ts`
+
+| Função                | Endpoint          | Descrição                      |
+| --------------------- | ----------------- | ------------------------------ |
+| `createProductAction` | `POST /products`  | Criar produto c/ upload imagem |
+| `deleteProductAction` | `DELETE /product` | Excluir/desativar produto      |
 
 ---
 
 ## Rotas (App Router)
 
-| Path        | Componente         | Status       |
-| ----------- | ------------------ | ------------ |
-| `/`         | `redirect(/login)` | Pronto       |
-| `/login`    | Card placeholder   | **Skeleton** |
-| `/register` | RegisterForm       | Pronto       |
+| Path                    | Descrição                 | Autenticação |
+| ----------------------- | ------------------------- | ------------ |
+| `/`                     | Redireciona para `/login` | Público      |
+| `/login`                | Formulário de login       | Público      |
+| `/register`             | Formulário de cadastro    | Público      |
+| `/dashboard`            | Home do dashboard         | JWT + Admin  |
+| `/dashboard/products`   | CRUD de produtos          | JWT + Admin  |
+| `/dashboard/categories` | CRUD de categorias        | JWT + Admin  |
 
 ---
 
@@ -174,11 +205,13 @@ registerActions(prevState, formData): Promise<{
 - [x] shadcn/ui configurado (10+ componentes)
 - [x] Tema escuro customizado (DomLuydd)
 - [x] apiClient wrapper
-- [x] Server action de registro
-- [x] Página de registro com formulário
-- [x] Toast de erro via sonner
-- [ ] Página de login (skeleton)
-- [ ] Páginas protegidas (dashboard, produtos, pedidos)
-- [ ] Autenticação (login, JWT storage, middleware)
+- [x] Tipos compartilhados (`src/lib/types.ts`)
+- [x] Autenticação JWT (login, cookie storage, middleware)
+- [x] Página de login com formulário
+- [x] Página de cadastro com formulário
+- [x] Logout com remoção de cookie
+- [x] Dashboard protegido com layout (sidebar + mobile)
+- [x] Página de produtos (listar, criar com upload de imagem, deletar)
+- [x] Página de categorias (listar, criar)
+- [ ] Gerenciamento de pedidos
 - [ ] Hooks customizados (`src/hooks/`)
-- [ ] Tipos compartilhados (`src/types/`)
