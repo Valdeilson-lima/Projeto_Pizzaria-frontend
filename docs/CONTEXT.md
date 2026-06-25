@@ -155,6 +155,15 @@ apiClient<T>(endpoint, {
 | `createProductAction` | `POST /products`  | Criar produto c/ upload imagem |
 | `deleteProductAction` | `DELETE /product` | Excluir/desativar produto      |
 
+### `src/actions/order.ts`
+
+| Função                 | Endpoint            | Descrição                    |
+| ---------------------- | ------------------- | ---------------------------- |
+| `getOrderDetailAction` | `GET /order/detail` | Buscar detalhes de um pedido |
+| `sendOrderAction`      | `PUT /order/send`   | Enviar pedido para cozinha   |
+| `finishOrderAction`    | `PUT /order/finish` | Finalizar pedido             |
+| `deleteOrderAction`    | `DELETE /order`     | Excluir pedido               |
+
 ---
 
 ## Rotas (App Router)
@@ -164,7 +173,7 @@ apiClient<T>(endpoint, {
 | `/`                     | Redireciona para `/login` | Público      |
 | `/login`                | Formulário de login       | Público      |
 | `/register`             | Formulário de cadastro    | Público      |
-| `/dashboard`            | Home do dashboard         | JWT + Admin  |
+| `/dashboard`            | Gerenciamento de pedidos  | JWT + Admin  |
 | `/dashboard/products`   | CRUD de produtos          | JWT + Admin  |
 | `/dashboard/categories` | CRUD de categorias        | JWT + Admin  |
 
@@ -213,5 +222,5 @@ apiClient<T>(endpoint, {
 - [x] Dashboard protegido com layout (sidebar + mobile)
 - [x] Página de produtos (listar, criar com upload de imagem, deletar)
 - [x] Página de categorias (listar, criar)
-- [ ] Gerenciamento de pedidos
+- [x] Gerenciamento de pedidos (listar, detalhar, enviar, finalizar, excluir)
 - [ ] Hooks customizados (`src/hooks/`)
