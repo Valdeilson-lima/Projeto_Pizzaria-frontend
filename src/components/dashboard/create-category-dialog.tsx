@@ -15,8 +15,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createCategoryAction } from "@/actions/category";
 import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 export function CreateCategoryDialog() {
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [state, formAction, isPending] = useActionState(
     createCategoryAction,
@@ -29,6 +31,7 @@ export function CreateCategoryDialog() {
     if (state.success) {
       toast.success("Categoria criada com sucesso!");
       setOpen(false);
+      router.refresh();
     }
 
     if (!state.success && state.error) {
