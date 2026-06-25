@@ -42,3 +42,26 @@ export async function createProductAction(
     return { success: false, error: "Erro desconhecido" };
   }
 }
+
+export async function deleteProductAction(
+  prevState: { success: boolean; error: string } | null,
+  formData: FormData
+) {
+  try {
+    const token = await getToken();
+    const id = formData.get("id") as string;
+
+    await apiClient<Product>(`/product?productId=${id}`, {
+      method: "DELETE",
+      token,
+    });
+
+    revalidatePath("/dashboard/products");
+    return { success: true, error: "" };
+  } catch (error) {
+    if (error instanceof Error) {
+      return { success: false, error: error.message };
+    }
+    return { success: false, error: "Erro desconhecido" };
+  }
+}

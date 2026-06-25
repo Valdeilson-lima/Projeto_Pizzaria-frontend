@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CreateProductDialog } from "@/components/dashboard/create-product-dialog";
+import { DeleteProductButton } from "@/components/dashboard/delete-product-button";
 import { formatPriceReal } from "@/lib/utils";
 import Image from "next/image";
 
@@ -77,13 +78,16 @@ export default async function ProductsPage() {
                 <TableHead className="text-gray-400 font-medium hidden lg:table-cell">
                   Criado em
                 </TableHead>
+                <TableHead className="text-gray-400 font-medium w-16">
+                  Ações
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {products.length === 0 ? (
                 <TableRow className="border-app-border hover:bg-transparent">
                   <TableCell
-                    colSpan={5}
+                    colSpan={6}
                     className="text-gray-500 text-center py-8"
                   >
                     Nenhum produto encontrado
@@ -132,6 +136,12 @@ export default async function ProductsPage() {
                         month: "long",
                         year: "numeric",
                       })}
+                    </TableCell>
+                    <TableCell>
+                      <DeleteProductButton
+                        productId={product.id}
+                        productName={product.name}
+                      />
                     </TableCell>
                   </TableRow>
                 ))
