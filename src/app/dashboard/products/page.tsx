@@ -34,7 +34,7 @@ export default async function ProductsPage() {
   ]);
 
   function formatPrice(price: number) {
-    return price.toLocaleString("pt-BR", {
+    return (price / 100).toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL",
     });
