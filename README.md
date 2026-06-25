@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# DomLuydd — Frontend
 
-## Getting Started
+> Sistema de gestão de pizzaria — frontend Next.js
 
-First, run the development server:
+## Stack
+
+| Camada      | Tecnologia                      |
+| ----------- | ------------------------------- |
+| Framework   | Next.js 16.2.9                  |
+| Linguagem   | TypeScript 5                    |
+| UI Library  | React 19.2.4                    |
+| Estilização | Tailwind CSS v4                 |
+| Componentes | shadcn/ui (style: `radix-nova`) |
+| Ícones      | lucide-react                    |
+| Headless UI | radix-ui 1.6                    |
+| Toast       | sonner 2.0                      |
+| Tema        | next-themes                     |
+
+## Pré-requisitos
+
+- Node.js 20+
+- npm ou pnpm
+- Backend rodando em `http://localhost:3333`
+
+## Configuração
 
 ```bash
+cp .env.example .env
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Variáveis de ambiente:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variável              | Valor padrão                |
+| --------------------- | --------------------------- |
+| `NEXT_PUBLIC_API_URL` | `http://localhost:3333/api` |
+| `API_URL`             | `http://localhost:3333/api` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Scripts
 
-## Learn More
+| Comando             | Descrição                  |
+| ------------------- | -------------------------- |
+| `npm run dev`       | Iniciar servidor dev       |
+| `npm run build`     | Build de produção          |
+| `npm run start`     | Iniciar servidor produção  |
+| `npm run typecheck` | Verificar tipos TypeScript |
 
-To learn more about Next.js, take a look at the following resources:
+## Projeto
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── actions/         # Server Actions
+│   ├── auth.ts      # Registro e autenticação
+│   ├── category.ts  # CRUD categorias
+│   └── product.ts   # CRUD produtos
+├── app/             # App Router
+│   ├── dashboard/   # Área logada (produtos, categorias)
+│   ├── login/       # Página de login
+│   └── register/    # Página de cadastro
+├── components/
+│   ├── dashboard/   # Componentes do dashboard
+│   ├── forms/       # Formulários
+│   └── ui/          # shadcn/ui components
+└── lib/
+    ├── api.ts       # Cliente HTTP (apiClient)
+    ├── auth.ts      # Gerenciamento de token
+    ├── types.ts     # Tipos compartilhados
+    └── utils.ts     # Utilitários (cn, formatPrice)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Funcionalidades
 
-## Deploy on Vercel
+- [x] Cadastro de usuário
+- [x] Autenticação JWT
+- [x] Dashboard com sidebar
+- [x] CRUD de produtos (criar, listar, deletar)
+- [x] Upload de imagem para produtos
+- [x] CRUD de categorias (criar, listar)
+- [ ] Página de login
+- [ ] Gerenciamento de pedidos
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Padrões
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Commits:** conventional commits (`feat:`, `fix:`, `chore:`)
+- **Componentes:** `"use client"` apenas se usar hooks/estado
+- **Formulários:** Server Actions com feedback via sonner toast
+- **Imports:** alias `@/` mapeia para `src/`
+- **Estilização:** classes Tailwind via `cn()`
