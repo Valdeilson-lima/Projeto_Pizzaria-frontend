@@ -53,9 +53,10 @@ src/
 ├── actions/         # Server Actions
 │   ├── auth.ts      # Registro e autenticação
 │   ├── category.ts  # CRUD categorias
-│   └── product.ts   # CRUD produtos
+│   ├── product.ts   # CRUD produtos
+│   └── order.ts     # CRUD pedidos
 ├── app/             # App Router
-│   ├── dashboard/   # Área logada (produtos, categorias)
+│   ├── dashboard/   # Área logada (pedidos, produtos, categorias)
 │   ├── login/       # Página de login
 │   └── register/    # Página de cadastro
 ├── components/
@@ -73,12 +74,12 @@ src/
 
 - [x] Cadastro de usuário
 - [x] Autenticação JWT
+- [x] Página de login
 - [x] Dashboard com sidebar
 - [x] CRUD de produtos (criar, listar, deletar)
 - [x] Upload de imagem para produtos
 - [x] CRUD de categorias (criar, listar)
-- [ ] Página de login
-- [ ] Gerenciamento de pedidos
+- [x] Gerenciamento de pedidos (listar, detalhar, enviar, finalizar, excluir)
 
 ## Padrões
 
