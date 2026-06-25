@@ -12,6 +12,7 @@ export async function createProductAction(
   try {
     const token = await getToken();
 
+    // Extrai o valor do preço do FormData e remove todos os caracteres não numéricos
     const rawPrice = formData.get("price") as string;
     const priceInCents = rawPrice.replace(/\D/g, "");
 

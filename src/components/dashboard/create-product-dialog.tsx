@@ -22,10 +22,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { createProductAction } from "@/actions/product";
-import { Plus } from "lucide-react";
+import { Plus, Trash2, Upload } from "lucide-react";
 import { Category } from "@/lib/types";
 import { useRouter } from "next/navigation";
 import { formatPrice } from "@/lib/utils";
+import Image from "next/image";
 
 interface CreateProductDialogProps {
   categories: Category[];
@@ -36,13 +37,13 @@ export function CreateProductDialog({ categories }: CreateProductDialogProps) {
   const [open, setOpen] = useState(false);
   const [categoryId, setCategoryId] = useState("");
   const [priceValue, setPriceValue] = useState("");
+  const [imagePreview, setImagePreview] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
+
   const [state, formAction, isPending] = useActionState(
     createProductAction,
     null
   );
-
-  console.log("state", categoryId);
-  console.log("state", typeof priceValue);
 
   useEffect(() => {
     if (!state) return;
@@ -63,6 +64,30 @@ export function CreateProductDialog({ categories }: CreateProductDialogProps) {
     const formated = formatPrice(e.target.value);
 
     setPriceValue(formated);
+  }
+
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("O tamanho da imagem não pode ser maior que 5MB.");
+      return;
+    }
+
+    setImageFile(file);
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setImagePreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function clearImage() {
+    setImageFile(null);
+    setImagePreview("");
   }
 
   return (
@@ -143,15 +168,47 @@ export function CreateProductDialog({ categories }: CreateProductDialogProps) {
             </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="file" className="text-white">
-              Imagem
+            <Label htmlFor="file" className="text-white ">
+              Imagem do Produto
             </Label>
+            {imagePreview ? (
+              <div className="w-full h-60 relative rounded-md overflow-hidden border border-app-border">
+                <Image
+                  src={imagePreview}
+                  alt="Imagem do Produto"
+                  fill
+                  quality={100}
+                  priority
+                  className="object-cover rounded-md"
+                />
+                <Button
+                  type="button"
+                  variant="destructive"
+                  className="absolute top-2 right-2 z-20 w-6 h-6 p-0 rounded-full flex items-center justify-center cursor-pointer"
+                  onClick={clearImage}
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+            ) : (
+              <div className="w-full h-32 border-2 border-dashed border-gray-400 rounded-md flex flex-col items-center justify-center cursor-pointer">
+                <Upload className="w-8 h-8 mx-auto text-gray-400 mb-2" />
+                <Label
+                  htmlFor="file"
+                  className="text-gray-400 cursor-pointer text-center"
+                >
+                  Clique para selecionar uma imagem ou arraste e solte aqui.
+                </Label>
+              </div>
+            )}
             <Input
               id="file"
               name="file"
               type="file"
-              accept="image/*"
-              className="text-white bg-app-background border-app-border h-9 file:bg-brand-primary file:text-white file:border-0 file:rounded-md file:px-3 file:h-8 file:text-sm file:cursor-pointer file:mr-3"
+              className="hidden"
+              accept="image/jpeg, image/png, image/jpg"
+              onChange={handleImageChange}
+              required
             />
           </div>
           <div className="flex justify-end gap-3 pt-2">

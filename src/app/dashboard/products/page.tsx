@@ -17,6 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CreateProductDialog } from "@/components/dashboard/create-product-dialog";
+import { formatPriceReal } from "@/lib/utils";
 import Image from "next/image";
 
 export default async function ProductsPage() {
@@ -32,13 +33,6 @@ export default async function ProductsPage() {
       cache: "no-store",
     }),
   ]);
-
-  function formatPrice(price: number) {
-    return (price / 100).toLocaleString("pt-BR", {
-      style: "currency",
-      currency: "BRL",
-    });
-  }
 
   return (
     <div className="space-y-6">
@@ -130,7 +124,7 @@ export default async function ProductsPage() {
                       {product.category?.name || "—"}
                     </TableCell>
                     <TableCell className="text-white">
-                      {formatPrice(product.price)}
+                      {formatPriceReal(product.price)}
                     </TableCell>
                     <TableCell className="text-gray-400 hidden lg:table-cell">
                       {new Date(product.createdAt).toLocaleDateString("pt-BR", {

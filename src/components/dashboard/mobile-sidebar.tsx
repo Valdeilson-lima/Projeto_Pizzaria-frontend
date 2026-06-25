@@ -53,7 +53,7 @@ export function MobileSidebar({ name }: SidebarProps) {
             >
               <SheetHeader>
                 <SheetTitle className="text-xl font-bold text-white">
-                  <h2 className="text-xl font-bold text-white">Menu</h2>
+                  Menu
                 </SheetTitle>
               </SheetHeader>
 
